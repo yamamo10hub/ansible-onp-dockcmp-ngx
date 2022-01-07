@@ -1,0 +1,5 @@
+Host web01
+  User admin
+  HostName 192.168.10.11
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null

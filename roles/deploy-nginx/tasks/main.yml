@@ -1,0 +1,30 @@
+---
+- name: dir check
+  stat:
+    path: /home/admin/docker
+  register: dir
+
+- name: dig dir
+  ansible.builtin.file:
+    path: /home/admin/docker
+    state: directory
+    mode: '0755'
+  when: not dir.stat.exists
+
+- name: copy compose-file
+  copy: 
+    src: prox-ngx1
+    dest: /home/admin/docker/
+
+- name: start ngx container
+  shell:
+  args:
+    cmd: docker-compose up -d
+    chdir: docker/prox-ngx1
+  register: return_from_shell
+  changed_when: False
+
+- name: check shellexec 
+  debug: 
+    msg: "{{ return_from_shell.stdout }}"
+  when: not ansible_check_mode

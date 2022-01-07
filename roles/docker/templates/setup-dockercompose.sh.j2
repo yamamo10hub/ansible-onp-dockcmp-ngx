@@ -1,0 +1,27 @@
+#!/bin/bash
+
+EXIST_DOCKER_ENGINE=`/bin/rpm -qa docker-ce`
+EXIST_DOCKER_COMPOSE=`ls /usr/local/bin/docker-compose`
+EXIST_OSCHECK={{ ansible_distribution }}
+
+if [[ $EXIST_OSCHECK =~ CentOS ]]; then
+  if [[ ! $EXIST_DOCKER_ENGINE =~ docker-ce ]]; then
+    sudo curl -fsSL https://get.docker.com -o /tmp/get-docker.sh 
+    /bin/sh /tmp/get-docker.sh
+  fi
+  if [[ ! $EXIST_DOCKER_COMPOSE =~ /usr/local/bin/docker-compose ]]; then
+    sudo curl -L "https://github.com/docker/compose/releases/download/{{ dockercmp_ver }}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+    ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    echo "[ok] docker-compose install done."
+  else
+    echo "[skipped] docker-compose already exist."
+    #exit 1
+  fi
+  #ifconfig eth0
+else
+  echo "[failed] not centos host. check target host."
+  exit 1
+fi
+
+#echo "shell exec end."

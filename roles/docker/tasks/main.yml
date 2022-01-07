@@ -1,0 +1,25 @@
+---
+- name: deploy setup shell
+  template: 
+    src: setup-dockercompose.sh.j2
+    dest: /tmp/setup-dockercompose.sh
+    mode: '0777'
+
+- name: install shell docker-compose
+  shell: /tmp/setup-dockercompose.sh
+  register: result
+  #changed_when: False
+
+- name: check shellexec debug
+  debug:
+    msg: "{{ result }}"
+
+- name: docker running check
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  when: 
+    - not ansible_check_mode
+    - "'[ok]' not in result.stdout"
+    #- result.stdout.find('[ok]') == -1

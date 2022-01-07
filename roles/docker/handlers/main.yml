@@ -1,0 +1,6 @@
+---
+# Handlers for docker
+
+- name: start docker
+  service: name=docker state=start
+

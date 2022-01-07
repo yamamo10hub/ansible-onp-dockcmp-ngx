@@ -1,0 +1,6 @@
+---
+# Variables listed here are applicable to all host groups
+
+dockercmp_ver : 1.29.2
+
+
